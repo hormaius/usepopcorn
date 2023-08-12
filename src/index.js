@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import StarRating from "./StarRating";
 
-function Test() {
+/* function Test() {
   const [movieRating, setMovieRating] = useState(0);
 
   return (
@@ -13,13 +13,13 @@ function Test() {
       <p>This movie was rated {movieRating} stars.</p>
     </div>
   );
-}
+} */
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <StarRating
+    {<App />}
+    {/* <StarRating
       maxRating={5}
       messages={["Terrible", "Bad", "Okay", "Good", "Amazing"]}
     />
@@ -30,6 +30,6 @@ root.render(
       className="test"
       defaultRating={5}
     />
-    <Test />
+    <Test /> */}
   </React.StrictMode>
 );
