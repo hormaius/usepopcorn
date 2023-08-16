@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
-import { useKey } from "./useKey";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -117,12 +116,23 @@ function Search({ query, setQuery }) {
   // useRef HOOKS
   const inputElement = useRef(null);
 
-  // SEARCH INPUT = ENTER
-  useKey("Enter", function () {
-    if (document.activeElement === inputElement.current) return;
-    inputElement.current.focus();
-    setQuery("");
-  });
+  useEffect(
+    function () {
+      function callback(e) {
+        if (document.activeElement === inputElement.current) return;
+        if (e.code === "Enter") {
+          inputElement.current.focus();
+          setQuery("");
+        }
+      }
+
+      inputElement.current.focus();
+
+      document.addEventListener("keydown", callback);
+      return () => document.addEventListener("keydown", callback);
+    },
+    [setQuery]
+  );
 
   // RETURN
   return (
@@ -335,9 +345,25 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     [title]
   );
 
-  // CLOSE MOVIE = ESCAPE
-  useKey("Escape", onCloseMovie);
-
+  // - global keypress ESC to back from movie details page
+  useEffect(
+    function () {
+      // -- cleanup function
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      // -- cleanup end
+      // - add event listener
+      document.addEventListener("keydown", callback);
+      // - execute cleanup, remove event listener
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
   // useEffect HOOKS END
   /////////////////////////////////////////////
   return (
